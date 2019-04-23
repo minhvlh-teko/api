@@ -12,6 +12,4 @@ ADD . /code/
 
 RUN chmod +x wait-for-it.sh
 
-CMD ["sh", "-c", "./wait-for-it.sh postgresql:5432 -t 0 -- flask db upgrade heads && flask run --host=0.0.0.0 --port=5000"]
-
 
