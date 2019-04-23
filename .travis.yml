@@ -17,6 +17,7 @@ script:
   - docker-compose ps
   - curl http://127.0.0.1/api/
   - docker-compose restart app
+  - sleep 10
   - curl http://127.0.0.1/api/
 after_script:
   - docker-compose ps
