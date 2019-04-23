@@ -12,4 +12,4 @@ ADD . /code/
 
 RUN chmod +x wait-for-it.sh
 
-
+CMD ["sh", "-c", "flask run --host=0.0.0.0 --port=5000"]
