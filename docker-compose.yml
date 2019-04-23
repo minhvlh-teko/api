@@ -16,6 +16,7 @@ services:
       - postgresql
     depends_on:
       - postgresql
+    tty: true
 
   postgresql:
     image: postgres:9.5
