@@ -16,3 +16,7 @@ script:
   - docker-compose exec -T app flask db migrate -m "add_user"
   - docker-compose exec -T app flask db upgrade
   - docker-compose restart app
+  - curl -sI http://127.0.0.1/api
+after_script:
+  - docker-compose ps
+  - docker-compose down
