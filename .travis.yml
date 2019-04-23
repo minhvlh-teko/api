@@ -1,5 +1,3 @@
-language: python
-
 services:
   - docker
 
@@ -18,8 +16,7 @@ before_install:
 addons:
   apt:
     packages:
-      - docker-ce
-	  
+      - docker-ce 
 script:
   - docker-compose up -d
   - docker-compose exec app flask db init
