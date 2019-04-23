@@ -16,7 +16,7 @@ Flask-Bcrypt==0.7.1
 faker==1.0.4
 sentry-sdk[flask]==0.7.7
 OdooRPC==0.6.1
-psycopg2==2.7.5
+psycopg2-binary
 flask-admin
 flask-login
 flask-security
