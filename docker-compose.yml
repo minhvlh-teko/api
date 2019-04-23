@@ -31,5 +31,3 @@ services:
     volumes:
       - ./scripts:/docker-entrypoint-initdb.d
       - /var/lib/postgresql/9.5/wms-api:/var/lib/postgresql/9.6/main
-    ports:
-      - '${POSTGRESQL_FORWARD_PORT}:5432'
