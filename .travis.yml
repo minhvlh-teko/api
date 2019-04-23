@@ -6,12 +6,11 @@ before_install:
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
-addons:
-  apt:
-    packages:
-      - docker-ce 
-script:
+before_script:
+  - cp .env.example .env
   - docker-compose up -d
+script:
+  - docker-compose ps
   - docker-compose exec app flask db init
   - docker-compose exec app flask db migrate -m "add_user"
   - docker-compose exec app flask db upgrade
