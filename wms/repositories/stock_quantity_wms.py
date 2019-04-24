@@ -1,50 +1,50 @@
 import logging
 
-import coreapi
-import coreschema
-from django.db import connections
-from rest_framework.exceptions import ValidationError
-from rest_framework.schemas import ManualSchema
+# import coreapi
+# import coreschema
+# from django.db import connections
+# from rest_framework.exceptions import ValidationError
+# from rest_framework.schemas import ManualSchema
 
 from .odoo_repo import OdooRepo
 
 _logger = logging.getLogger('api')
-
-manual_schema = ManualSchema(fields=[
-    coreapi.Field(
-        "products",
-        required=True,
-        location="path",
-        schema=coreschema.String(description='Product Codes, separated by comma')
-    ),
-    coreapi.Field(
-        "regions",
-        required=False,
-        location="path",
-        schema=coreschema.String(description="Regions Codes, separated by comma")
-    ),
-
-    coreapi.Field(
-        "branches",
-        required=False,
-        location="path",
-        schema=coreschema.String(description="Branch Codes, separated by comma")
-    ),
-
-    coreapi.Field(
-        "warehouses",
-        required=False,
-        location="path",
-        schema=coreschema.String(description="Warehouses Codes, separated by comma")
-    ),
-
-    coreapi.Field(
-        "locations",
-        required=False,
-        location="path",
-        schema=coreschema.String(description="Locations Codes, separated by comma")
-    ),
-])
+#
+# manual_schema = ManualSchema(fields=[
+#     coreapi.Field(
+#         "products",
+#         required=True,
+#         location="path",
+#         schema=coreschema.String(description='Product Codes, separated by comma')
+#     ),
+#     coreapi.Field(
+#         "regions",
+#         required=False,
+#         location="path",
+#         schema=coreschema.String(description="Regions Codes, separated by comma")
+#     ),
+#
+#     coreapi.Field(
+#         "branches",
+#         required=False,
+#         location="path",
+#         schema=coreschema.String(description="Branch Codes, separated by comma")
+#     ),
+#
+#     coreapi.Field(
+#         "warehouses",
+#         required=False,
+#         location="path",
+#         schema=coreschema.String(description="Warehouses Codes, separated by comma")
+#     ),
+#
+#     coreapi.Field(
+#         "locations",
+#         required=False,
+#         location="path",
+#         schema=coreschema.String(description="Locations Codes, separated by comma")
+#     ),
+# ])
 
 
 class StockQuantWms(OdooRepo):
@@ -53,7 +53,7 @@ class StockQuantWms(OdooRepo):
     _mapping = {
         'list': 'api_get_available_stock',
     }
-    schema = manual_schema
+    """schema = manual_schema
 
     def _parse_payload(self, request):
 
@@ -226,4 +226,4 @@ class StockQuantWms(OdooRepo):
                 'code': 0,
                 'message': 'OK',
                 'data': res,
-            }
+            }"""

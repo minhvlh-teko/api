@@ -19,7 +19,7 @@ from .internal_api import ns as internal_api_ns
 __author__ = 'ThucNC'
 _logger = logging.getLogger('api')
 
-api_wms = Blueprint('api', __name__, url_prefix='/api')
+api_wms = Blueprint('api', __name__, url_prefix='/api/v2')
 
 custom_definition = {
     'info': {
@@ -56,14 +56,14 @@ def init_app(app, **kwargs):
     """
     # Add all necesary namespace here
     # api.add_namespace(user_ns)
-    api.add_namespace(branch_ns, tag_group_name='WMS')
-    api.add_namespace(warehouse_ns, tag_group_name='WMS')
-    api.add_namespace(location_ns, tag_group_name='WMS')
-    api.add_namespace(stock_quant_ns, tag_group_name='WMS')
-    api.add_namespace(stock_out_ns, tag_group_name='WMS')
+    api.add_namespace(branch_ns, tag_group_name='WMS', path='branches')
+    api.add_namespace(warehouse_ns, tag_group_name='WMS', path='warehouses')
+    api.add_namespace(location_ns, tag_group_name='WMS', path='locations')
+    api.add_namespace(stock_quant_ns, tag_group_name='WMS', path='stockQuants')
+    api.add_namespace(stock_out_ns, tag_group_name='WMS', path='stockOut')
 
-    api.add_namespace(srm_product_ns, tag_group_name='SRM')
-    api.add_namespace(internal_api_ns, tag_group_name='Internal API')
+    api.add_namespace(srm_product_ns, tag_group_name='SRM', path='srmProducts')
+    api.add_namespace(internal_api_ns, tag_group_name='Internal API', path='internals')
 
     app.register_blueprint(api_wms)
     api.error_handlers[Exception] = global_error_handler

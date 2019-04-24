@@ -38,7 +38,7 @@ class OdooRepo:
     def _get_account(self, client_ip):
         """
         GEt odoo account to loggin and get data from api
-        :param client_ip: string ip
+        :param str client_ip:  ip
         :return: [OdooAccount] account info
         """
         account = OdooAccount.query.filter(

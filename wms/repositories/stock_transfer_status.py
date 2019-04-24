@@ -1,8 +1,8 @@
 import logging
 
-from django.db import connections
-from rest_framework.exceptions import ValidationError
-from rest_framework.response import Response
+# from django.db import connections
+# from rest_framework.exceptions import ValidationError
+# from rest_framework.response import Response
 
 from .odoo_repo import OdooRepo
 
@@ -13,7 +13,7 @@ _logger = logging.getLogger('api')
 class StockTransferStatus(OdooRepo):
     _name = 'stock_transfer_status'
 
-    def _parse_payload(self, request):
+    """def _parse_payload(self, request):
         super()._parse_payload(request)
 
         if self._api_method == 'list':
@@ -53,3 +53,4 @@ class StockTransferStatus(OdooRepo):
         except Exception as e:
             _logger.exception('[%s@%s] FAILED' % (self._name, self._api_method))
             return Response(repr(e), status=500)
+            """

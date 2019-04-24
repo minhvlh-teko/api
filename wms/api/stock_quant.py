@@ -12,7 +12,7 @@ from ..extensions import Namespace
 __author__ = 'SonLp'
 _logger = logging.getLogger('api')
 
-ns = Namespace('stockQuants', description='StockQuant operations')
+ns = Namespace('Stock Quantities', description='StockQuant operations')
 
 # Define Schemas for Request and Response API decorator here
 _stock_quant_item = ns.model('stock_quant_item', models.StockQuantSchema.stock_quant_item)
@@ -57,7 +57,7 @@ class StockQuants(_fr.Resource):
         return odoo_service.call_odoo_repo('StockQuant', 'list', data)
 
 
-@ns.route('/getMin', methods=['GET', 'POST'], )
+@ns.route('/getMin', methods=['GET'], )
 class StockQuantsOut(_fr.Resource):
     @ns.expect(_stock_quant_req, validate=True)
     @ns.marshal_with(_stock_quant_min_res, as_list=True, description="Successful Return")

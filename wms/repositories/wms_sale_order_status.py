@@ -1,8 +1,8 @@
 import logging
 
-from django.db import connections
-from rest_framework.exceptions import ValidationError
-from rest_framework.response import Response
+# from django.db import connections
+# from rest_framework.exceptions import ValidationError
+# from rest_framework.response import Response
 
 from .odoo_repo import OdooRepo
 
@@ -11,7 +11,7 @@ _logger = logging.getLogger('api')
 
 class WmsSaleOrderStatus(OdooRepo):
     _name = 'wms_sale_order_status'
-
+"""
     def _parse_payload(self, request):
         super()._parse_payload(request)
 
@@ -58,3 +58,4 @@ class WmsSaleOrderStatus(OdooRepo):
         except Exception as e:
             _logger.exception('[%s@%s] FAILED' % (self._name, self._api_method))
             return Response(repr(e), status=500)
+"""
