@@ -50,6 +50,8 @@ def create_app():
         'level': logging.ERROR,
     }
 
+    app.config['RESTPLUS_MASK_SWAGGER'] = False
+
     sentry_sdk.init(
         dsn=dns,
         integrations=[FlaskIntegration()],
