@@ -57,14 +57,16 @@ class SrmProductLists(_fr.Resource):
 
 @ns.route('/<int:id>', methods=['PUT', 'DELETE'])
 class SrmProductItem(_fr.Resource):
+    @ns.expect(_srm_product_req, validate=True)
     @ns.marshal_with(_srm_product_res, as_list=False, description="Successful Update")
     def put(self, id):
         """
         Update a product
         :return: feId[SrmProduct]
         """
-        # data = request.args or request.json
-        odoo_service.call_odoo_repo('SrmProduct', 'update', {'id': id})
+        data = request.args or request.json
+        data['feId'] = id
+        odoo_service.call_odoo_repo('SrmProduct', 'update', data)
 
     @ns.marshal_with(_srm_product_res, as_list=False, description="Successful Delete")
     def delete(self, id):
