@@ -1,19 +1,27 @@
+services: docker
 env:
-  - DOCKER_COMPOSE_VERSION=1.24.0
+  global:
+    - TEST_DATABASE_URI= postgresql://flask_wms:1234@127.0.0.1:5432/wms_api_test
+    - PROJECT_PATH=wms-api/
 
-before_install:
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
-before_script:
-  - cp .env.example .env
-  - docker-compose up -d
-script:
-  - export COMPOSE_INTERACTIVE_NO_CLI=1
-  - docker-compose exec -T app flask db migrate -m "add_user"
-  - docker-compose exec -T app flask db upgrade
-  - docker-compose ps
-  - curl http://127.0.0.1/api/
-after_script:
-  - docker-compose down
+sudo: required
+jobs:
+  include:
+    - stage: test
+      language: python
+      python: '3.6'
+      cache: pip
+      services:
+        - postgresql
+      install:
+        # pip install
+        - pip install -r requirements.txt
+      before_script:
+        - cp .env.example .env
+        - psql -c 'create database wms_api_test;' -U postgres
+        - flask db migrate
+        - flask db upgrade heads
+      script:
+        - pytest -v -ra --color=auto --tb=auto -p no:warnings --cov-report=xml
+      after_script:
+        - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
