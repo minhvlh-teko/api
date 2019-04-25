@@ -29,10 +29,12 @@
 
 
 #### Start app for development
-- Copy .env.example => .env
+- Copy .env.example => .env `cp .env.example .env`
 - Edit mapping port, or environment if need
 - Run `virtualenv -p /usr/bin/python3 .venv --always-copy`
 - Run `.venv/bin/pip install -r requirements.txt --no-cache-dir`
+- Create new migration: `.venv/bin/flask db migrate`  
+- Upgrade: `.venv/bin/flask db upgrade heads` 
 - Open http://localhost:{APP_PORT}/api . Enjoy!
 
 #### Deployment
@@ -42,14 +44,16 @@
 - Run `docker-compose up`
 
 #### Database Migrations
-- Create new migration: `.venv/bin/flask db migrate -m "add_user"`  
-- Upgrade: `.venv/bin/flask db upgrade`  
+- Create new migration: `.venv/bin/flask db migrate`  
+- Upgrade: `.venv/bin/flask db upgrade heads`  
 - Downgrade: `.venv/bin/flask db downgrade`  
 
 
 ### Console commands
 
+- Upgrade dbs before running: `.venv/bin/flask db upgrade heads`
 - To run application: `.venv/bin/flask run`
+- To test application: `.venv/bin/pytest -v -ra --color=auto --tb=auto -p no:warnings --cov-report=xml`
 
 ### Database migration
 
