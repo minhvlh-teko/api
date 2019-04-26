@@ -23,6 +23,6 @@ jobs:
         - flask db migrate
         - flask db upgrade heads
       script:
-        - pytest -v -ra --color=auto --tb=auto -p no:warnings --cov-report=xml
+        - pytest -v -ra --color=yes --tb=auto -p no:warnings --cov-report=xml
       after_script:
         - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
