@@ -1,7 +1,7 @@
 services: docker
 env:
   global:
-    - TEST_DATABASE_URI= postgresql://flask_wms:1234@127.0.0.1:5432/wms_api_test
+    - SQLPG= postgresql://flask_wms:1234@127.0.0.1:5432/wms_api_test
     - PROJECT_PATH=wms-api/
 
 sudo: required
@@ -18,7 +18,8 @@ jobs:
         - pip install -r requirements.txt
       before_script:
         - cp .env.example .env
-        - psql -c 'create database wms_api_test;' -U postgres
+        - psql -c "CREATE USER wms_api with CREATEDB PASSWORD '$PGPASS';" -U postgres
+        - psql -c 'CREATE DATABASE wms_api_test OWNER wms_api;' -U postgres
         - flask db migrate
         - flask db upgrade heads
       script:
