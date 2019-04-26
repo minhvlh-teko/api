@@ -40,3 +40,4 @@ from .location import LocationSchema, LocationMappingSchema
 from .srm_product import SrmProductSchema
 from .stock_quant import StockQuantSchema
 from .stock_out import StockOutSchema
+from .eton_api import EtonApiSchema

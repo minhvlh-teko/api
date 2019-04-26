@@ -11,7 +11,7 @@ from ..extensions import Namespace
 __author__ = 'SonLp'
 _logger = logging.getLogger('api')
 
-ns = Namespace('warehouses', description='Warehouse operations')
+ns = Namespace('Warehouses', description='Warehouse operations')
 
 # Define Schemas for Request and Response API decorator here
 _warehouse_res = ns.model('warehouse_list_res', models.WarehouseSchema.warehouse_res)

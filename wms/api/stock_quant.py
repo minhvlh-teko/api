@@ -57,7 +57,7 @@ class StockQuants(_fr.Resource):
         return odoo_service.call_odoo_repo('StockQuant', 'list', data)
 
 
-@ns.route('/getMin', methods=['GET'], )
+@ns.route('/get_min', methods=['GET'], )
 class StockQuantsOut(_fr.Resource):
     @ns.expect(_stock_quant_req, validate=True)
     @ns.marshal_with(_stock_quant_min_res, as_list=True, description="Successful Return")

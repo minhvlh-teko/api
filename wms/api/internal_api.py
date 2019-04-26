@@ -10,7 +10,7 @@ from ..extensions import Namespace
 __author__ = 'SonLp'
 _logger = logging.getLogger('api')
 
-ns = Namespace('internal', description='Internal API operations')
+ns = Namespace('Internal', description='Internal API operations')
 
 
 @ns.route('/accountTag', methods=['POST', 'PUT', 'DELETE'], doc=False)

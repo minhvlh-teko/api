@@ -11,7 +11,7 @@ from ..extensions import Namespace
 __author__ = 'SonLp'
 _logger = logging.getLogger('api')
 
-ns = Namespace('branches', description='Branch operations')
+ns = Namespace('Branches', description='Branch operations')
 
 # Define Schemas for Request and Response API decorator here
 _branch_res = ns.model('branch_list_res', models.BranchSchema.branch_res)

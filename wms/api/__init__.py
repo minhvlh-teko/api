@@ -15,6 +15,7 @@ from .srm_product import ns as srm_product_ns
 from .stock_quant import ns as stock_quant_ns
 from .stock_out import ns as stock_out_ns
 from .internal_api import ns as internal_api_ns
+from .eton_api import ns as eton_api_ns
 
 __author__ = 'ThucNC'
 _logger = logging.getLogger('api')
@@ -56,14 +57,16 @@ def init_app(app, **kwargs):
     """
     # Add all necesary namespace here
     # api.add_namespace(user_ns)
-    api.add_namespace(branch_ns, tag_group_name='WMS', path='branches')
-    api.add_namespace(warehouse_ns, tag_group_name='WMS', path='warehouses')
-    api.add_namespace(location_ns, tag_group_name='WMS', path='locations')
-    api.add_namespace(stock_quant_ns, tag_group_name='WMS', path='stockQuants')
-    api.add_namespace(stock_out_ns, tag_group_name='WMS', path='stockOut')
+    api.add_namespace(branch_ns, tag_group_name='WMS', path='/branches')
+    api.add_namespace(warehouse_ns, tag_group_name='WMS', path='/warehouses')
+    api.add_namespace(location_ns, tag_group_name='WMS', path='/locations')
+    api.add_namespace(stock_quant_ns, tag_group_name='WMS', path='/stock_quants')
+    api.add_namespace(stock_out_ns, tag_group_name='WMS', path='/stock_out')
 
-    api.add_namespace(srm_product_ns, tag_group_name='SRM', path='srmProducts')
-    api.add_namespace(internal_api_ns, tag_group_name='Internal API', path='internals')
+    api.add_namespace(srm_product_ns, tag_group_name='SRM', path='/srm_products')
+    api.add_namespace(internal_api_ns, tag_group_name='Internal API', path='/internals')
+
+    api.add_namespace(eton_api_ns, tag_group_name='Eton API', path='/eton')
 
     app.register_blueprint(api_wms)
     api.error_handlers[Exception] = global_error_handler

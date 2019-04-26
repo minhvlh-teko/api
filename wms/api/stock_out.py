@@ -12,7 +12,7 @@ from ..extensions import Namespace
 __author__ = 'SonLp'
 _logger = logging.getLogger('api')
 
-ns = Namespace('stockOut', description='StockOut operations')
+ns = Namespace('Stock Out', description='StockOut operations')
 
 # Define Schemas for Request and Response API decorator here
 _stock_out_request_req = ns.model('stock_out_request_req', models.StockOutSchema.stock_out_request_req)

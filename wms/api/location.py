@@ -11,7 +11,7 @@ from ..extensions import Namespace
 __author__ = 'SonLp'
 _logger = logging.getLogger('api')
 
-ns = Namespace('locations', description='Location operations')
+ns = Namespace('Locations', description='Location operations')
 
 # Define Schemas for Request and Response API decorator here
 _location_res = ns.model('location_list_res', models.LocationSchema.location_res)

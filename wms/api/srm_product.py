@@ -13,7 +13,7 @@ from ..models.base import ErrorSchema
 __author__ = 'SonLp'
 _logger = logging.getLogger('api')
 
-ns = Namespace('srmProducts', description='SRM product operations')
+ns = Namespace('SRM Products', description='SRM product operations')
 
 # Define Schemas for Request and Response API decorator here
 _srm_product_res = ns.model('srm_product_item_res', models.SrmProductSchema.srm_product_res)
