@@ -20,3 +20,5 @@ psycopg2-binary
 flask-admin
 flask-login
 flask-security
+redis==3.2.1
+dictsearch==3.1.0

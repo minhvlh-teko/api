@@ -47,6 +47,10 @@ SQLALCHEMY_DATABASE_URI = 'postgresql://{0}:{1}@{2}:{3}/{4}'.format(
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 SQLALCHEMY_COMMIT_ON_TEARDOWN = True
 
+REDIS_ENABLED = os.getenv('REDIS_ENABLED')
+REDIS_HOST = os.getenv('REDIS_HOST')
+REDIS_PORT = os.getenv('REDIS_PORT')
+
 
 def _env(name, default):
     """ Get configuration from environment in priorities:

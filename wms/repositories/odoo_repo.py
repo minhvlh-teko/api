@@ -1,14 +1,16 @@
 # coding=utf-8
 import logging
 import re
+import json
 
 import odoorpc
 import xmlrpc.client as xc
 from ..models import OdooAccount
 from ..extensions import exceptions
 from werkzeug.datastructures import ImmutableMultiDict
+from dictsearch.search import iterate_dictionary
 
-from flask import request
+from flask import request, current_app
 
 __author__ = 'Son'
 _logger = logging.getLogger('api')
@@ -18,6 +20,10 @@ class OdooRepo:
     """
     This Repo is the port to connect and get api from Odoo
     """
+    # Const values
+    _CACHE_KEY_PREFIX = '_redis_odoo__'
+
+    # properties values
     _api_method = None
     _client_ip = None
     _cors_allow = ''
@@ -31,9 +37,27 @@ class OdooRepo:
     }
     '''if this param is set to true, all requests and responses param will be standardlized'''
     _is_formalization = False
+    ''' by default is sending to odoo, for the case testing sample data, set to faker, or cache: set to cache'''
+    _target = 'odoo'
+    ''' Set enable to get data from cache instead of get data directly from odoo'''
+    _used_cache = False
+    ''' Life time limited for caching, default 300 seconds, 0 mean unlimited'''
+    _cached_time_limited = 300
+    ''' Unique cache key'''
+    _cache_key = None
+    ''' Cache provider'''
+    _cache_provider = None
 
-    def __init__(self):
-        pass
+    def __init__(self, target='odoo', used_cache=None, cache_life_time=300):
+        """
+        Construct method
+        :param str target: target server to get data, enum('odoo', 'cache', 'faker')
+        :param boolean used_cache: enable cache or not
+        :param int cache_life_time: life time for cache storage
+        """
+        self._target = target
+        self._used_cache = used_cache if used_cache else self._used_cache
+        self._cached_time_limited = cache_life_time
 
     def _get_account(self, client_ip):
         """
@@ -184,7 +208,27 @@ class OdooRepo:
             else:
                 client_ip = self._get_client_ip()
                 account = self._get_account(client_ip)
+            return self._send_request(account)
 
+        except Exception as e:
+            _logger.info('Failed to authenticate error= %s', repr(e))
+            raise ValueError('Exception: %s' % repr(e))
+
+    def _send_request(self, account=None, faker={}):
+        """
+        Send request by payload to _target
+        :param obj account:
+        :param dict|list faker: faker data from target response, using for unit test
+        :return: dict response
+        """
+        # Check if should get data from cache first or not, only apply for get method
+        if (self._used_cache and (self._api_method == 'list' or self._api_method == 'retrieve')):
+            response = self._get_cache_data(self._payload)
+            if response:
+                _logger.info("Cached data exists, return data.....")
+                return response
+
+        if self._target == 'odoo':
             if account.port != 443:
                 url = 'http://{0}:{1}'.format(account.url, account.port)
             else:
@@ -195,12 +239,19 @@ class OdooRepo:
                 account.save()
             _logger.info("Prepare to send to odoo")
             models = xc.ServerProxy('{}/xmlrpc/2/object'.format(url), allow_none=True)
-            return models.execute_kw(account.dbs, account.uid, account.password,
-                                     self._model, self._mapping.get(self._api_method),
-                                     [self._payload])
-        except Exception as e:
-            _logger.info('Failed to authenticate error= %s', repr(e))
-            raise ValueError('Exception: %s' % repr(e))
+            response = models.execute_kw(account.dbs, account.uid, account.password,
+                                         self._model, self._mapping.get(self._api_method),
+                                         [self._payload])
+            # should cache response or not
+            _logger.info("Use cache: {0}, api_method= {1}".format(self._used_cache, self._api_method))
+            if (self._used_cache and (self._api_method == 'list' or self._api_method == 'retrieve')):
+                self._set_cache_data(req_data=self._payload, res_data=response)
+                _logger.info("Saved data to cached.....")
+            return response
+        elif self._target == 'faker':
+            return faker
+        else:
+            raise exceptions.HTTPException(message='Invalid TARGET provider.')
 
     def _connect(self):
         try:
@@ -365,3 +416,77 @@ class OdooRepo:
                 response[key] = response[key][0]
 
         return response
+
+    def _get_req_data_fields(self, req_data):
+        """
+        Convert request data params to string
+        :param dict|list req_data:
+        :return: serialized string
+        """
+        # //Should order req_data fields
+        return json.dumps(req_data)
+
+    def _generate_cache_key(self, req_data=None):
+        """
+        Generate unique cache key for the request
+        :param list|dict req_data:
+        :return: str key
+        """
+        # using prefix plus class name of this instance
+        prefix = self._CACHE_KEY_PREFIX + self.__class__.__name__ + '__'
+        return prefix + (self._get_req_data_fields(req_data) if req_data else '')
+
+    def _get_cache_key(self, req_data=None):
+        """
+        Get cache key
+        :param dict|list req_data:
+        :return: str key
+        """
+        if not self._cache_key:
+            self._cache_key = self._generate_cache_key(req_data)
+        return self._cache_key
+
+    def get_cache_provider(self):
+        """
+        Get cache provider
+        :return: Redis provider
+        """
+        if not self._cache_provider:
+            # _logger.info(current_app.config)
+            self._cache_provider = current_app.config['REDIS_PROVIDER']
+        return self._cache_provider
+
+    def _get_cache_data(self, req_data=None):
+        """
+        Get cache data, using lazy load
+        :param dict|list req_data: request data
+        :return:
+        """
+        key = self._get_cache_key(req_data)
+        cache_provider = self.get_cache_provider()
+        _logger.info("Get data from cached..... with ke={0}".format(key))
+        _logger.info("Data: {0}".format(cache_provider.get(key)))
+        if cache_provider:
+            data = cache_provider.get(key)
+            if data:
+                _logger.info("Successfully get cache data object...")
+                return json.loads(data.decode("utf-8"))
+
+        return None
+
+    def _set_cache_data(self, req_data=None, res_data=None):
+        """
+        Set cache data, using lazy load
+        :param req_data:
+        :param str res_data:
+        :return:
+        """
+        key = self._get_cache_key(req_data)
+        cache_provider = self.get_cache_provider()
+        if cache_provider:
+            _logger.info("Store response to cache....")
+
+            return cache_provider.set(key, json.dumps(res_data), nx=self._cached_time_limited)
+        else:
+            _logger.info("Store response to cache fail, provider is null...")
+            return None

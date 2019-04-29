@@ -1,6 +1,6 @@
 # coding=utf-8
 import logging
-
+import redis
 import flask
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
@@ -59,6 +59,16 @@ def create_app():
         in_app_exclude=['app.extensions.exceptions'],
         before_send=before_send
     )
+
+    # Add redis provider
+
+    _logger.info("REDIS_ENABLED={0}".format(os.environ.get('REDIS_ENABLED')))
+
+    if os.environ.get('REDIS_ENABLED'):
+        _logger.info("Init Redis cache....")
+
+        app.config['REDIS_PROVIDER'] = redis.Redis(host=app.config['REDIS_HOST'],
+                                               port=app.config['REDIS_PORT'])
 
     # setup logging
     logging.config.fileConfig(app.config['LOGGING_CONFIG_FILE'],

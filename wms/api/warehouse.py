@@ -33,7 +33,7 @@ class Warehouses(_fr.Resource):
         return warehouse_list
 
 
-@ns.route('/mapping', methods=['GET'])
+@ns.route('/mapping', methods=['GET'], doc=False)
 class WarehouseMapping(_fr.Resource):
     @ns.marshal_with(_warehouse_mapping_res, as_list=True)
     def get(self):

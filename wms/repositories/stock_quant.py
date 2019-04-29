@@ -14,6 +14,8 @@ class StockQuant(OdooRepo):
         'create': 'api_get_available_stock',  # support POST method for long list of products
     }
     _is_formalization = True
+    ''' Set enable to get data from cache instead of get data directly from odoo'''
+    _used_cache = True
 
     def _formalize(self, response):
         """

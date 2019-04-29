@@ -33,7 +33,7 @@ class Branches(_fr.Resource):
         return branch_list
 
 
-@ns.route('/mapping', methods=['GET'])
+@ns.route('/mapping', methods=['GET'], doc=False)
 class BranchMapping(_fr.Resource):
     @ns.marshal_with(_branch_res, as_list=True)
     def get(self):

@@ -33,7 +33,7 @@ class Locations(_fr.Resource):
         return location_list
 
 
-@ns.route('/mapping', methods=['GET'])
+@ns.route('/mapping', methods=['GET'], doc=False)
 class LocationMapping(_fr.Resource):
     @ns.marshal_with(_location_mapping_res, as_list=True)
     def get(self):
