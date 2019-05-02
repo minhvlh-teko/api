@@ -16,6 +16,52 @@ class StockQuant(OdooRepo):
     _is_formalization = True
     ''' Set enable to get data from cache instead of get data directly from odoo'''
     _used_cache = True
+    _faker_data = {
+        'req': {
+            'products': True,
+            'regions': False,
+            'branches': False,
+            'warehouses': False,
+            'locations': False,
+        },
+        'res': {
+
+            "data": {
+
+                "1200109": [{
+
+                    "warehouse": "CH0000",
+
+                    "location": "000001",
+
+                    "available": 6
+
+                },
+
+                    {
+
+                        "warehouse": "CP01",
+
+                        "location": "0101",
+
+                        "available": 1
+
+                    }],
+
+                "1805119": [{
+
+                    "warehouse": "CP04",
+
+                    "location": "0402",
+
+                    "available": 10
+
+                }]
+
+            }
+
+        }
+    }
 
     def _formalize(self, response):
         """

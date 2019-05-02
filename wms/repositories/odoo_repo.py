@@ -48,6 +48,31 @@ class OdooRepo:
     ''' Cache provider'''
     _cache_provider = None
 
+    '''
+    Faker data for testing
+    - For instance:
+        _faker_data = {
+            'req': {
+                'id': True,
+                'name': False
+            },
+            'res': {
+            
+            }
+        }
+      It means field 'id' is required, 'name' is not required  
+    '''
+    _faker_data = {
+        'req': None,
+        'res': None
+    }
+    '''If payload has these key, then update properties and pop'''
+    _special_params = {
+        'no_cache': True,
+        'use_faker': False,
+        'debug_mode': False
+    }
+
     def __init__(self, target='odoo', used_cache=None, cache_life_time=300):
         """
         Construct method
@@ -214,7 +239,7 @@ class OdooRepo:
             _logger.info('Failed to authenticate error= %s', repr(e))
             raise ValueError('Exception: %s' % repr(e))
 
-    def _send_request(self, account=None, faker={}):
+    def _send_request(self, account=None, faker=None):
         """
         Send request by payload to _target
         :param obj account:
@@ -249,7 +274,7 @@ class OdooRepo:
                 _logger.info("Saved data to cached.....")
             return response
         elif self._target == 'faker':
-            return faker
+            return self.get_faker_data(self._payload, faker)
         else:
             raise exceptions.HTTPException(message='Invalid TARGET provider.')
 
@@ -332,6 +357,8 @@ class OdooRepo:
 
         if payload:
             self._payload = payload
+            # pop special keys
+            self._parse_special_params(self._payload)
         else:
             self._payload = {}
 
@@ -486,7 +513,67 @@ class OdooRepo:
         if cache_provider:
             _logger.info("Store response to cache....")
 
-            return cache_provider.set(key, json.dumps(res_data), nx=self._cached_time_limited)
+            return cache_provider.set(key, json.dumps(res_data), ex=self._cached_time_limited)
         else:
             _logger.info("Store response to cache fail, provider is null...")
             return None
+
+    def get_faker_data(self, req_data=None, res_data=None):
+        """
+        Get Faker data, using for unit test
+        :param req_data:
+        :param res_data:
+        :return:
+        """
+        if res_data:
+            self.set_faker_data(res_data=res_data)
+
+        # Check if all keys is valid
+        if req_data:
+            invalid_key = None
+            for key in req_data:
+                if key not in self._faker_data['req']:
+                    invalid_key = key
+                    break
+            if invalid_key:
+                # Invalid input key
+                raise exceptions.BadRequestException('Key ({0}) is invalid'.format(invalid_key))
+            # Check if required fields dont exist
+
+            if self._faker_data['req']:
+                for key in self._faker_data['req']:
+                    if key not in req_data:
+                        invalid_key = key
+                        break
+            if invalid_key:
+                # Missing key required
+                raise exceptions.BadRequestException('Key ({0}) is required'.format(invalid_key))
+        return self._faker_data['res']
+
+    def set_faker_data(self, req_data=None, res_data=None):
+        """
+        Set faker data format for unit test
+        :param dict|list req_data:
+        :param dic|list res_data:
+        :return:
+        """
+        if req_data:
+            self._faker_data['req'] = req_data
+        if res_data:
+            self._faker_data['res'] = res_data
+
+    def _parse_special_params(self, payload):
+        """
+        Pop payload item for those keys which are in _special_params
+        :param dict payload:
+        :return:
+        """
+        if payload:
+            for key in self._special_params:
+                if key in payload:
+                    self._special_params[key] = payload.pop(key)
+                    if key == 'use_faker':
+                        self._target = 'faker' if self._special_params[key] else self._target
+                    if key == 'no_cache':
+                        self._used_cache = True if self._special_params[key] else False
+        return payload
