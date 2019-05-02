@@ -22,6 +22,10 @@ jobs:
         - psql -c 'CREATE DATABASE wms_api_test OWNER wms_api;' -U postgres
         - flask db migrate
         - flask db upgrade heads
+        - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
+            > ./cc-test-reporter
+        - chmod +x ./cc-test-reporter
+        - ./cc-test-reporter before-build
       script:
         - pytest -v -ra --color=yes --tb=auto -p no:warnings --cov-report=xml
       after_script:

@@ -572,3 +572,8 @@ class OdooRepo:
             for key in self._special_params:
                 if key in payload:
                     self._special_params[key] = payload.pop(key)
+                    if key == 'use_faker':
+                        self._target = 'faker' if self._special_params[key] else self._target
+                    if key == 'no_cache':
+                        self._used_cache = True if self._special_params[key] else False
+        return payload

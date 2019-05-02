@@ -7,12 +7,12 @@ from flask import request
 
 from .. import models
 from ..services import odoo_service
-from ..extensions import Namespace
+from ..extensions import Namespace, exceptions
 
 __author__ = 'SonLp'
 _logger = logging.getLogger('api')
 
-ns = Namespace('Stock Quantities', description='StockQuant operations')
+ns = Namespace('Stock Quantities', description='StockQuant operations', validate=True)
 
 # Define Schemas for Request and Response API decorator here
 _stock_quant_item = ns.model('stock_quant_item', models.StockQuantSchema.stock_quant_item)
@@ -33,7 +33,7 @@ _stock_quant_min_res = ns.model('_stock_quant_item_min', {
 
 # add multi params
 _stock_quant_req = ns.parser()
-_stock_quant_req.add_argument('products', type=str, location='query', help='List sku', required=True, action='append')
+_stock_quant_req.add_argument('products', type=int, location='query', help='List sku', required=True, action='append')
 _stock_quant_req.add_argument('regions', type=int, location='query', help='Vùng / miền', action='append')
 _stock_quant_req.add_argument('branches', type=str, location='query', help='Chi nhánh', action='append')
 _stock_quant_req.add_argument('warehouses', type=str, location='query', help='Mã Kho', action='append')
@@ -52,6 +52,9 @@ class StockQuants(_fr.Resource):
         # print("Get StockQuant List")
 
         data = request.args or request.json
+        # validate products required
+        if not data or not data['products']:
+            raise exceptions.BadRequestException("Products is required")
         # print(json.dumps(data))
         # print(type(data))
         return odoo_service.call_odoo_repo('StockQuant', 'list', data)
