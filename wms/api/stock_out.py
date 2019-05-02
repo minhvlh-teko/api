@@ -24,14 +24,13 @@ class StockOut(_fr.Resource):
     @ns.expect(_stock_out_request_req, validate=True)
     @ns.doc(
         responses={
-            200: 'Xác nhận yêu cầu lấy hàng',
-            403: 'Đã hủy đơn',
+            200: 'Confirm order request',
+            403: 'Order canceled',
         }
     )
     def post(self):
         """
-        Yêu cầu lấy hàng
-        :return:
+        Request to pick up product
         """
         # print("Get StockOut List")
 
@@ -43,14 +42,13 @@ class StockOut(_fr.Resource):
     @ns.expect(_stock_out_confirm_req, validate=True)
     @ns.doc(
         responses={
-            200: 'Xác nhận yêu cầu lấy hàng',
-            403: 'Hàng thiếu',
+            200: 'Confirm order request',
+            403: 'Underselling',
         }
     )
     def put(self):
         """
-        Xác nhận lấy hàng
-        :return:
+        Confirm pick up product
         """
         # print("Get StockOut List")
 

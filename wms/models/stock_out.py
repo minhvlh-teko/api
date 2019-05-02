@@ -10,15 +10,15 @@ _logger = logging.getLogger('api')
 
 class StockOutSchema:
     stock_out_request_req = {
-        'requestCode': fields.String(required=True, description='Mã phiếu xuất kho'),
-        'requestType': fields.Integer(required=True, description='Loại xuất'),
-        'orderID': fields.String(required=True, description='Mã đơn hàng (nếu thuộc loại xuất khác thì orderID = 0)'),
-        'createdAt': fields.DateTime(required=True, description='Thời gian yêu cầu'),
+        'requestCode': fields.String(required=True, description='Request code'),
+        'requestType': fields.Integer(required=True, description='Request type'),
+        'orderID': fields.String(required=True, description='Order code (if in other export type, orderID = 0)'),
+        'createdAt': fields.DateTime(required=True, description='Request time'),
     }
 
     stock_out_confirm_req = {
-        'requestCode': fields.String(required=True, description='Mã phiếu xuất kho'),
-        'staffId': fields.Integer(required=True, description='Mã nhân viên nhận hàng'),
-        'orderID': fields.String(required=True, description='mã đơn hàng (nếu thuộc loại xuất khác thì orderID = 0)'),
-        'createdAt': fields.DateTime(required=True, description='Thời gian xác nhận'),
+        'requestCode': fields.String(required=True, description='Request code'),
+        'staffId': fields.Integer(required=True, description='Staff ID'),
+        'orderID': fields.String(required=True, description='Order ID'),
+        'createdAt': fields.DateTime(required=True, description='Confirmation time'),
     }
