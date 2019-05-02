@@ -7,6 +7,7 @@ from flask import request
 
 from .. import models
 from ..services import odoo_service
+from ..models.base import ErrorSchema
 from ..extensions import Namespace
 
 __author__ = 'SonLp'
@@ -18,16 +19,14 @@ ns = Namespace('Stock Out', description='StockOut operations')
 _stock_out_request_req = ns.model('stock_out_request_req', models.StockOutSchema.stock_out_request_req)
 _stock_out_confirm_req = ns.model('stock_out_confirm_req', models.StockOutSchema.stock_out_confirm_req)
 
+_error_res = ns.model('error_res', ErrorSchema.error_res)
+
 
 @ns.route('/', methods=['POST', 'PUT'], )
 class StockOut(_fr.Resource):
     @ns.expect(_stock_out_request_req, validate=True)
-    @ns.doc(
-        responses={
-            200: 'Confirm order request',
-            403: 'Order canceled',
-        }
-    )
+    @ns.marshal_with(_error_res, description='Confirm order request', code=200)
+    @ns.marshal_with(_error_res, description='Order canceled', code=403)
     def post(self):
         """
         Request to pick up product
@@ -40,12 +39,8 @@ class StockOut(_fr.Resource):
         return odoo_service.call_odoo_repo('StockOutRequest', 'create', data=data, module_name='stock_out')
 
     @ns.expect(_stock_out_confirm_req, validate=True)
-    @ns.doc(
-        responses={
-            200: 'Confirm order request',
-            403: 'Underselling',
-        }
-    )
+    @ns.marshal_with(_error_res, description='Confirm order request', code=200)
+    @ns.marshal_with(_error_res, description='Underselling', code=403)
     def put(self):
         """
         Confirm pick up product

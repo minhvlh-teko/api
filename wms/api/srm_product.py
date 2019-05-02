@@ -24,27 +24,11 @@ _error_res = ns.model('error_res', ErrorSchema.error_res)
 
 @ns.route('/', methods=['GET', 'POST'])
 class SrmProductLists(_fr.Resource):
-    # @ns.marshal_with(_srm_product_res, as_list=True, description="Successful Return")
-    # def get(self):
-    #     """
-    #     Get list all srm_products
-    #     :return: list[SrmProduct]
-    #     """
-    #     print("Get SrmProduct List")
-    #     # print(json.dumps(request.args))
-    #     data = request.args or request.json
-    #     srm_product_list = services.srm_product.get_srm_products(data)
-    #     return srm_product_list
-
     @ns.expect(_srm_product_req, validate=True)
-    @ns.marshal_with(_srm_product_res, as_list=False, description="Successful Creation")
-    @ns.doc(
-        responses={
-            400: 'Category does not exist',
-            403: 'Insufficient permissions',
-            500: 'Internal failure',
-        }
-    )
+    @ns.marshal_with(_error_res, as_list=False, description="Successful Creation", code=200)
+    @ns.marshal_with(_error_res, description='Category does not exist', code=400)
+    @ns.marshal_with(_error_res, description='Insufficient permissions', code=403)
+    @ns.marshal_with(_error_res, description='Internal failure', code=500)
     def post(self):
         """
         Create a product
@@ -57,7 +41,7 @@ class SrmProductLists(_fr.Resource):
 @ns.route('/<int:id>', methods=['PUT', 'DELETE'])
 class SrmProductItem(_fr.Resource):
     @ns.expect(_srm_product_req, validate=True)
-    @ns.marshal_with(_srm_product_res, as_list=False, description="Successful Update")
+    @ns.marshal_with(_error_res, as_list=False, description="Successful Update")
     def put(self, id):
         """
         Update a product
@@ -66,7 +50,7 @@ class SrmProductItem(_fr.Resource):
         data['feId'] = id
         odoo_service.call_odoo_repo('SrmProduct', 'update', data)
 
-    @ns.marshal_with(_srm_product_res, as_list=False, description="Successful Delete")
+    @ns.marshal_with(_error_res, as_list=False, description="Successful Delete")
     def delete(self, id):
         """
         Delete a product
