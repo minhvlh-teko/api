@@ -10,13 +10,13 @@ _logger = logging.getLogger('api')
 
 class EtonApiSchema:
     eton_product = Model('eton_product', {
-        'sku': fields.String(required=True, description='Mã sản phẩm'),
-        'qty': fields.Integer(required=True, description='Số lượng'),
-        'serials': fields.List(fields.String, required=True, description='Danh sách serial')
+        'sku': fields.String(required=True, description='Product code'),
+        'qty': fields.Integer(required=True, description='Quantity'),
+        'serials': fields.List(fields.String, required=True, description='Serial list')
     })
 
     eton_po_req = Model('eton_po_req', {
-        'items': fields.Nested(eton_product, required=True, description='Danh sách thông tin sản phẩm cần xử lý')
+        'items': fields.List(fields.Nested(eton_product, required=True, description='List of product information to be processed'))
     })
 
     eton_so_req = eton_po_req.clone('eton_so_req', {
@@ -26,9 +26,9 @@ class EtonApiSchema:
         )
     })
 
-    eton_so_returned_req = eton_so_req.clone('eton_so_req', {
+    eton_so_returned_req = eton_po_req.clone('eton_so_returned_req', {
         'type': fields.String(
-            description='Loại return'
+            description='Return type'
         )
     })
 
