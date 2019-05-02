@@ -10,38 +10,38 @@ _logger = logging.getLogger('api')
 
 class SrmProductSchema:
     srm_product = {
-        # 'fe_id': fields.Integer(required=True, description='Mã sản phẩm tạo tại seller_center'),
-        'defaultCode': fields.String(required=True, description='Mã'),
-        'name': fields.String(required=True, description='Tên'),
-        'shortName': fields.String(required=False, description='Tên tính năng'),
+        # 'fe_id': fields.Integer(required=True, description='Product id generated at seller_center'),
+        'defaultCode': fields.String(required=True, description='Default code'),
+        'name': fields.String(required=True, description='Name'),
+        'shortName': fields.String(required=False, description='Feature name'),
         'partNumber': fields.String(required=False, description='Part Number'),
-        'attributeValueCode': fields.String(required=False, description='Thuộc tính (màu sắc)'),
-        'type': fields.String(required=True, description='Loại sản phẩm:\
-- consu: Sản phẩm không quản lý tồn kho (Cho phép bán âm)\
-- product: Sản phẩm có quản lý tồn & lưu kho', enum=['consu','product']),
+        'attributeValueCode': fields.String(required=False, description='Property (color)'),
+        'type': fields.String(required=True, description='Product type:\
+- consu: Product does not manage inventory (Allow to sell negative)\
+- product: Product with inventory management and storage', enum=['consu','product']),
 
-        'barcode': fields.String(required=True, description='Mã vạch'),
-        'productBrandCode': fields.String(required=True, description='Thương hiệu'),
-        'categCode': fields.String(required=True, description='Nhóm sản phẩm'),
-        'uomName': fields.String(required=True, description='Đơn vị tính'),
-        'uomPoName': fields.String(required=True, description='Đơn vị đo lường mua hàng'),
-        'salePoint': fields.Float(required=False, description='Điểm sản phẩm'),
-        'warrantyPeriod': fields.Float(required=False, description='Thời gian bảo hành'),
-        'warrantyNote': fields.String(required=False, description='Ghi chú bảo hành'),
-        'exchangePeriod': fields.Integer(required=False, description='Một đổi 1 trong (ngày)'),
-        'warrantyStamp_qty': fields.Integer(required=False, description='Số lượng tem bảo hành'),
-        'saleOnlineOnly': fields.Boolean(required=True, description='Chỉ bán online', default=False),
-        'supportDelivery': fields.Boolean(required=True, description='Hỗ trợ giao hàng', default=False),
-        'productStatus': fields.Integer(required=False, description='Trạng thái'),
-        'costPriceCalc': fields.Boolean(required=True, description='Tính giá thành', default=False),
+        'barcode': fields.String(required=True, description='Barcode'),
+        'productBrandCode': fields.String(required=True, description='Brand code'),
+        'categCode': fields.String(required=True, description='Category'),
+        'uomName': fields.String(required=True, description='Unit'),
+        'uomPoName': fields.String(required=True, description='Purchase unit of measurement'),
+        'salePoint': fields.Float(required=False, description='Product points'),
+        'warrantyPeriod': fields.Float(required=False, description='Warranty period'),
+        'warrantyNote': fields.String(required=False, description='Warranty notes'),
+        'exchangePeriod': fields.Integer(required=False, description='1-1 Exchange period (day)'),
+        'warrantyStampQty': fields.Integer(required=False, description='Number of warranty stamps'),
+        'saleOnlineOnly': fields.Boolean(required=True, description='Sale online only', default=False),
+        'supportDelivery': fields.Boolean(required=True, description='Support delivery', default=False),
+        'productStatus': fields.Integer(required=False, description='Status'),
+        'costPriceCalc': fields.Boolean(required=True, description='Calculate cost price', default=False),
         'tracking': fields.String(required=True, description='tracking', default=None),
-        'note': fields.String(required=False, description='Ghi chú'),
-        'isUncounted': fields.Boolean(required=True, description='Không kiểm đếm', default=False),
-        'isService': fields.Boolean(required=True, description='Sản phẩm dịch vụ', default=False),
+        'note': fields.String(required=False, description='Note'),
+        'isUncounted': fields.Boolean(required=True, description='No tally', default=False),
+        'isService': fields.Boolean(required=True, description='Product service', default=False),
     }
 
     srm_product_req = srm_product.copy()
     srm_product_res = {
-        'feId': fields.Integer(required=True, description='Mã sản phẩm tạo tại seller_center'),
+        'feId': fields.Integer(required=True, description='Product id generated at seller_center'),
     }
 

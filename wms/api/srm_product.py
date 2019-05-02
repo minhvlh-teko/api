@@ -40,7 +40,7 @@ class SrmProductLists(_fr.Resource):
     @ns.marshal_with(_srm_product_res, as_list=False, description="Successful Creation")
     @ns.doc(
         responses={
-            400: 'Nhóm sản phẩm không tồn tại',
+            400: 'Category does not exist',
             403: 'Insufficient permissions',
             500: 'Internal failure',
         }
@@ -48,7 +48,6 @@ class SrmProductLists(_fr.Resource):
     def post(self):
         """
         Create a product
-        :return: feId[SrmProduct]
         """
         data = request.args or request.json
         # rs = services.srm_product.create_srm_product(data)
@@ -62,7 +61,6 @@ class SrmProductItem(_fr.Resource):
     def put(self, id):
         """
         Update a product
-        :return: feId[SrmProduct]
         """
         data = request.args or request.json
         data['feId'] = id
@@ -72,6 +70,5 @@ class SrmProductItem(_fr.Resource):
     def delete(self, id):
         """
         Delete a product
-        :return: feId[SrmProduct]
         """
         return odoo_service.call_odoo_repo('SrmProduct', 'destroy', {'id': id})
