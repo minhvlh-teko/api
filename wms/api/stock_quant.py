@@ -34,10 +34,10 @@ _stock_quant_min_res = ns.model('_stock_quant_item_min', {
 # add multi params
 _stock_quant_req = ns.parser()
 _stock_quant_req.add_argument('products', type=int, location='query', help='List sku', required=True, action='append')
-_stock_quant_req.add_argument('regions', type=int, location='query', help='Vùng / miền', action='append')
-_stock_quant_req.add_argument('branches', type=str, location='query', help='Chi nhánh', action='append')
-_stock_quant_req.add_argument('warehouses', type=str, location='query', help='Mã Kho', action='append')
-_stock_quant_req.add_argument('locations', type=str, location='query', help='Địa điểm', action='append')
+_stock_quant_req.add_argument('regions', type=int, location='query', help='Regions', action='append')
+_stock_quant_req.add_argument('branches', type=str, location='query', help='Branches', action='append')
+_stock_quant_req.add_argument('warehouses', type=str, location='query', help='Warehouses code', action='append')
+_stock_quant_req.add_argument('locations', type=str, location='query', help='Locations', action='append')
 
 
 @ns.route('/', methods=['GET'], )
