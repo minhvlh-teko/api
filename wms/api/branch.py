@@ -24,7 +24,7 @@ class Branches(_fr.Resource):
     def get(self):
         """
         Get list all branches
-        :return: list[Branch]
+        :return: list[Branch] - list all branches
         """
         print("Get Branch List")
         # print(json.dumps(request.args))
@@ -39,7 +39,7 @@ class BranchMapping(_fr.Resource):
     def get(self):
         """
         Get list all branches mapping
-        :return: list[Branch]
+        :return: list[Branch] - list all branches
         """
 
         branch_mapping_list = services.branch.get_branch_mapping()

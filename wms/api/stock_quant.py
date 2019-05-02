@@ -47,7 +47,7 @@ class StockQuants(_fr.Resource):
     def get(self):
         """
         Get list all stock quants
-        :return: list[StockQuant]
+        :return: list[StockQuant] - list all stock quants
         """
         # print("Get StockQuant List")
 
@@ -67,7 +67,7 @@ class StockQuantsOut(_fr.Resource):
     def get(self):
         """
         Get list all stock quants but for minimize properties
-        :return: list[StockQuant]
+        :return: list[StockQuant] - list all stock quants
         """
         # print("Get StockQuant List")
 

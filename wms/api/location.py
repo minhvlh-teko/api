@@ -24,7 +24,7 @@ class Locations(_fr.Resource):
     def get(self):
         """
         Get list all locations
-        :return: list[Location]
+        :return: list[Location] - list all locations
         """
         print("Get Location List")
         # print(json.dumps(request.args))
@@ -39,7 +39,7 @@ class LocationMapping(_fr.Resource):
     def get(self):
         """
         Get list all locations mapping
-        :return: list[Location]
+        :return: list[Location] - list all locations
         """
 
         location_mapping_list = services.location.get_location_mapping()
