@@ -25,7 +25,7 @@ _teko_biz_type_location_detail_req.add_argument('warehouses', type=str, location
 @ns.route('/', methods=['GET'])
 class TekoBizTypeLocationDetail(_fr.Resource):
     @ns.expect(_teko_biz_type_location_detail_req, validate=True)
-    @ns.marshal_with(_teko_biz_type_location_detail_res, as_list=True, description="Successful Return")
+    @ns.marshal_with(_teko_biz_type_location_detail_res, as_list=True, skip_none=True, description="Successful Return")
     def get(self):
         """
         Get list all warehouses
@@ -33,9 +33,11 @@ class TekoBizTypeLocationDetail(_fr.Resource):
         """
         print("Get Warehouse List")
         # print(json.dumps(request.args))
-        data = request.args or request.json
+        warehouses = request.args.get("warehouses").split(",")
+        data={"warehouses":warehouses}
         # warehouse_list = services.warehouse.get_warehouses(data)
         # return warehouse_list
+        # print (data)
         return odoo_service.call_odoo_repo('TekoBizTypeLocationDetail', 'list', data)
 
 

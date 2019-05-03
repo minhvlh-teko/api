@@ -179,7 +179,7 @@ class OdooRepo:
             _logger.info('[%s@%s] Completed.' % (self._name, self._api_method))
             rs_data = self._formalize(response)
 
-            print (rs_data) #MinhVlh
+            # print (rs_data) #MinhVlh
             return rs_data
 
             # Set response header CORS for public API
