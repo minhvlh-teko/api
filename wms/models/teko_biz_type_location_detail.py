@@ -2,42 +2,21 @@
 
 import logging
 
-from flask_restplus import fields, Model
+from flask_restplus import fields
 
-__author__ = 'Huu'
+__author__ = 'MinhVlh'
 _logger = logging.getLogger('api')
 
 
-class EtonApiSchema:
-    eton_product = Model('eton_product', {
-        'sku': fields.String(required=True, description='Product code'),
-        'qty': fields.Integer(required=True, description='Quantity'),
-        'serials': fields.List(fields.String, required=True, description='Serial list')
-    })
+class TekoBizTypeLocationDetailSchema:
+    stock_quant_req = {
+        'warehouses_code': fields.String(required=False, description='Warehouses code'),
+    }
 
-    eton_po_req = Model('eton_po_req', {
-        'items': fields.List(fields.Nested(eton_product, required=True, description='List of product information to be processed'))
-    })
+    teko_biz_type_location_detail_res = {
+        'location_code': fields.String(required=False, description='Branch'),
+        'warehouse_code': fields.String(required=False, description='Warehouse code'),
+        'product_biz_type_code': fields.String(required=False, description='Type of product business'),
+    }
 
-    eton_so_req = eton_po_req.clone('eton_so_req', {
-        'eventType': fields.String(
-            description='event type value MUST be: `picked`, `packed`, `delivered`, `returned`',
-            enum=['picked', 'packed', 'delivered', 'returned']
-        )
-    })
-
-    eton_so_returned_req = eton_po_req.clone('eton_so_returned_req', {
-        'type': fields.String(
-            description='Return type'
-        )
-    })
-
-    eton_success_res = Model('eton_success_res', {
-        'code': fields.Integer(example=0),
-        'message': fields.String()
-    })
-
-    eton_fail_res = eton_success_res.clone('eton_fail_res', {
-        'code': fields.Integer(example=1)
-    })
 

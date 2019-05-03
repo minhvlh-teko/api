@@ -1,47 +1,37 @@
 # coding=utf-8
 import logging
-from ..extensions import Namespace
-from flask_restplus import Resource
-from ..models import EtonApiSchema
-from ..services import odoo_service
+import json
+
+import flask_restplus as _fr
 from flask import request
 
-__author__ = 'inh'
+from .. import services, models
+from ..extensions import Namespace
+from ..services import odoo_service
+
+__author__ = 'MinhVlh'
 _logger = logging.getLogger('api')
 
-ns = Namespace('Eton', description='Eton APIs')
+ns = Namespace('Teko Biz Type Location Detail', description='Teko Biz Type Location Detail')
 
-# Register Schemas for Request and Response API decorator here
-ns.models[EtonApiSchema.eton_product.name] = EtonApiSchema.eton_product
-ns.models[EtonApiSchema.eton_po_req.name] = EtonApiSchema.eton_po_req
-ns.models[EtonApiSchema.eton_so_req.name] = EtonApiSchema.eton_so_req
-ns.models[EtonApiSchema.eton_so_returned_req.name] = EtonApiSchema.eton_so_returned_req
-ns.models[EtonApiSchema.eton_success_res.name] = EtonApiSchema.eton_success_res
-ns.models[EtonApiSchema.eton_fail_res.name] = EtonApiSchema.eton_fail_res
+# Define Schemas for Request and Response API decorator here
+_teko_biz_type_location_detail_res = ns.model('teko_biz_type_location_detail_list_res', models.TekoBizTypeLocationDetailSchema.teko_biz_type_location_detail_res)
 
-
-@ns.route('/<int:id>', methods=['GET'])
-@ns.doc(params={'id': 'ID phiếu IN của stock.picking cần xử lý WMS'})
-class ExternalPO(Resource):
-    @ns.expect(EtonApiSchema.eton_po_req, validate=True)
-    @ns.marshal_with(EtonApiSchema.eton_success_res, description='Operation succeed', code=200)
-    @ns.marshal_with(EtonApiSchema.eton_fail_res, description='Operation failed', code=500)
-    def get(self, id):
-        data = request.get_json()
-        data['_id'] = id
-        repo_name = 'TekoBizTypeLocationDetail'
-        return odoo_service.call_odoo_repo(repo_name, 'retrieve', data=data)
 
 
 @ns.route('/', methods=['GET'])
-class ExternalSO(Resource):
-    @ns.expect(EtonApiSchema.eton_so_req, validate=True)
-    @ns.marshal_with(EtonApiSchema.eton_success_res, description='Successful updating', code=200)
-    @ns.marshal_with(EtonApiSchema.eton_fail_res, description='Operation failed', code=500)
-    def get(self, id):
-        data = request.get_json()
-        repo_name = 'TekoBizTypeLocationDetail'
-
-        return odoo_service.call_odoo_repo(repo_name, 'list', data=data)
+class TekoBizTypeLocationDetail(_fr.Resource):
+    @ns.marshal_with(_teko_biz_type_location_detail_res, as_list=True, description="Successful Return")
+    def get(self):
+        """
+        Get list all warehouses
+        :return: list[Warehouse]
+        """
+        print("Get Warehouse List")
+        # print(json.dumps(request.args))
+        data = request.args or request.json
+        # warehouse_list = services.warehouse.get_warehouses(data)
+        # return warehouse_list
+        return odoo_service.call_odoo_repo('TekoBizTypeLocationDetail', 'list', data)
 
 

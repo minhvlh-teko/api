@@ -16,7 +16,7 @@ from .stock_quant import ns as stock_quant_ns
 from .stock_out import ns as stock_out_ns
 from .internal_api import ns as internal_api_ns
 from .eton_api import ns as eton_api_ns
-
+from .teko_biz_type_location_detail import ns as teko_biz_type_location_detail_ns
 __author__ = 'ThucNC'
 _logger = logging.getLogger('api')
 
@@ -67,6 +67,8 @@ def init_app(app, **kwargs):
     api.add_namespace(internal_api_ns, tag_group_name='Internal API', path='/internals')
 
     api.add_namespace(eton_api_ns, tag_group_name='Eton API', path='/eton')
+
+    api.add_namespace(teko_biz_type_location_detail_ns, tag_group_name='WMS', path='/teko_biz_type_location_detail')
 
     app.register_blueprint(api_wms)
     api.error_handlers[Exception] = global_error_handler
