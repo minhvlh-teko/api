@@ -17,10 +17,14 @@ ns = Namespace('Teko Biz Type Location Detail', description='Teko Biz Type Locat
 # Define Schemas for Request and Response API decorator here
 _teko_biz_type_location_detail_res = ns.model('teko_biz_type_location_detail_list_res', models.TekoBizTypeLocationDetailSchema.teko_biz_type_location_detail_res)
 
+_teko_biz_type_location_detail_req = ns.parser()
+_teko_biz_type_location_detail_req.add_argument('warehouses', type=str, location='query', help='Warehouses code', action='split')
+# _teko_biz_type_location_detail_req.add_argument('location_code', type=str, location='query', help='location code', action='split')
 
 
 @ns.route('/', methods=['GET'])
 class TekoBizTypeLocationDetail(_fr.Resource):
+    @ns.expect(_teko_biz_type_location_detail_req, validate=True)
     @ns.marshal_with(_teko_biz_type_location_detail_res, as_list=True, description="Successful Return")
     def get(self):
         """
