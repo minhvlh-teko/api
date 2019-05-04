@@ -9,7 +9,7 @@ _logger = logging.getLogger('api')
 
 
 class TekoBizTypeLocationDetailSchema:
-    stock_quant_req = {
+    teko_biz_type_location_detail_req = {
         'warehouses': fields.String(required=False, description='Warehouses code'),
         # 'location_code': fields.String(required=False, description='location code'),
 

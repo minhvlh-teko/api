@@ -207,7 +207,7 @@ class OdooRepo:
                 return self._apply_camelcase_to_dict(response.get("data")) if self._is_formalization else response.get(
                     "data")
             else:
-                return {}
+                return [] #MinhVlh
         else:
 
             msg = "There is a problem with response format"

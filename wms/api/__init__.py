@@ -68,7 +68,7 @@ def init_app(app, **kwargs):
 
     api.add_namespace(eton_api_ns, tag_group_name='Eton API', path='/eton')
 
-    api.add_namespace(teko_biz_type_location_detail_ns, tag_group_name='WMS', path='/teko_biz_type_location_detail')
+    api.add_namespace(teko_biz_type_location_detail_ns, tag_group_name='WMS', path='/warehouses/biz_type_location')
 
     app.register_blueprint(api_wms)
     api.error_handlers[Exception] = global_error_handler
