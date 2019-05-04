@@ -18,7 +18,7 @@ ns = Namespace('Teko Biz Type Location Detail', description='Teko Biz Type Locat
 _teko_biz_type_location_detail_res = ns.model('teko_biz_type_location_detail_list_res', models.TekoBizTypeLocationDetailSchema.teko_biz_type_location_detail_res)
 
 _teko_biz_type_location_detail_req = ns.parser()
-_teko_biz_type_location_detail_req.add_argument('warehouses', type=str, location='query', help='Warehouses code', action='split')
+_teko_biz_type_location_detail_req.add_argument('warehouses', type=str, location='args', help='Warehouses code', action='split')
 # _teko_biz_type_location_detail_req.add_argument('location_code', type=str, location='query', help='location code', action='split')
 
 
@@ -28,16 +28,15 @@ class TekoBizTypeLocationDetail(_fr.Resource):
     @ns.marshal_with(_teko_biz_type_location_detail_res, as_list=True, skip_none=True, description="Successful Return")
     def get(self):
         """
-        Get list all warehouses
-        :return: list[Warehouse]
+        Get list teko biz type location detail
+        :return: list[teko biz type location detail]
         """
         print("Get Warehouse List")
-        # print(json.dumps(request.args))
-        warehouses = request.args.get("warehouses").split(",")
+        warehouses = request.args.get("warehouses")
+        if warehouses:
+            warehouses.split(",")
         data={"warehouses":warehouses}
-        # warehouse_list = services.warehouse.get_warehouses(data)
-        # return warehouse_list
-        # print (data)
+
         return odoo_service.call_odoo_repo('TekoBizTypeLocationDetail', 'list', data)
 
 
